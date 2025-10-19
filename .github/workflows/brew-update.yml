@@ -1,0 +1,65 @@
+name: Auto bump ab-download-manager cask
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # 每天 11:17 SGT 左右运行；可改
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: macos-latest
+    env:
+      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout tap repo
+        uses: actions/checkout@v4
+
+      - name: Ensure Homebrew is available
+        run: |
+          if ! command -v brew >/dev/null 2>&1; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            echo "/opt/homebrew/bin" >> "$GITHUB_PATH"
+          fi
+          brew --version
+
+      #- name: Brew update
+      #  run: brew update
+
+      #- name: (Optional) Audit current cask quickly
+      #  run: brew audit --cask --strict --online ./Casks/ab-download-manager.rb || true
+
+      - name: Livecheck to see if newer exists
+        id: detect
+        run: |
+          brew tap CoZooo/tap
+          RAW="$(brew livecheck --cask --newer-only ab-download-manager || true)"
+          echo "LIVE: $RAW"
+          RAW_CLEAN="$(printf "%s" "$RAW" | sed -E 's/\x1B\[[0-9;]*[A-Za-z]//g')"
+              NEW_VER="$(printf "%s" "$RAW_CLEAN" \
+                | grep -oE '==>\s*[0-9A-Za-z._-]+' \
+                | awk '{print $2}' \
+                | tail -n1)"
+          if [ -z "$NEW_VER" ]; then
+            echo "No newer version found. Skip bump."
+            echo "newver=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Detected new version: $NEW_VER"
+          echo "newver=$NEW_VER" >> "$GITHUB_OUTPUT"
+
+      - name: Bump cask
+        run: |
+          NEW_VER="${{ steps.detect.outputs.newver }}"
+          brew bump-cask-pr --no-browse --write-only --commit \
+            --version "$NEW_VER" \
+            ab-download-manager
+      
+      - name: Push changes
+        run: |
+          BRANCH="main"
+          git checkout -b "$BRANCH"
+          git push --set-upstream origin "$BRANCH"
