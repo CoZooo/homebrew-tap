@@ -55,7 +55,22 @@ jobs:
         if: ${{ steps.detect.outputs.newver != '' }}
         run: |
           NEW_VER="${{ steps.detect.outputs.newver }}"
-          brew bump-cask-pr --no-browse \
+          BRANCH="abdownloadmanager-bump-${NEW_VER}"
+          git fetch origin main
+          git checkout -B "$BRANCH" origin/main
+          brew bump-cask-pr --no-browse --write-only --commit \
             --version "$NEW_VER" \
             ab-download-manager
+          git push -u origin "$BRANCH"
 
+      - name: Create PR with gh
+        if: ${{ steps.detect.outputs.newver != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NEW_VER="${{ steps.detect.outputs.newver }}"
+          gh pr create \
+            --base main \
+            --head "auto-bump-${NEW_VER}" \
+            --title "ab-download-manager: bump to ${NEW_VER}" \
+            --body "Automated bump via workflow"
