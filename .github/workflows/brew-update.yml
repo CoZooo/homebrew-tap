@@ -33,6 +33,7 @@ jobs:
       #  run: brew audit --cask --strict --online ./Casks/ab-download-manager.rb || true
 
       - name: Livecheck to see if newer exists
+        id: detect
         run: |
           brew tap CoZooo/tap
           RAW="$(brew livecheck --cask --newer-only ab-download-manager || true)"
@@ -51,8 +52,6 @@ jobs:
           echo "newver=$NEW_VER" >> "$GITHUB_OUTPUT"
 
       - name: Bump cask
-        env:
-          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           NEW_VER="${{ steps.detect.outputs.newver }}"
           brew bump-cask-pr --no-browse --write-only --commit \
