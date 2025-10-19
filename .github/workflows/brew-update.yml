@@ -35,15 +35,29 @@ jobs:
         run: |
           brew tap CoZooo/tap
           brew livecheck --cask --newer-only ab-download-manager || true
+          RAW="$(brew livecheck --cask --newer-only ab-download-manager || true)"
+          echo "LIVE: $RAW"
+          NEW_VER="$(printf "%s" "$RAW" | sed -nE 's/.*==>\s*([0-9][0-9A-Za-z._-]*).*/\1/p')"
+          if [ -z "$NEW_VER" ]; then
+            echo "No newer version found. Skip bump."
+            echo "newver=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "Detected new version: $NEW_VER"
+          echo "newver=$NEW_VER" >> "$GITHUB_OUTPUT"
 
-
-      - name: Bump cask (write & commit locally)
+      - name: Bump cask
+        if: steps.detect.outputs.newver != ''
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          brew bump-cask-pr --no-browse --write-only --commit ab-download-manager
+          NEW_VER="${{ steps.detect.outputs.newver }}"
+          brew bump-cask-pr --no-browse --write-only --commit \
+            --version "$NEW_VER" \
+            ab-download-manager
       
       - name: Push changes
+        if: steps.detect.outputs.newver != ''
         run: |
           BRANCH="main"
           git checkout -b "$BRANCH"
