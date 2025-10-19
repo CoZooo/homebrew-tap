@@ -34,7 +34,6 @@ jobs:
       - name: Livecheck to see if newer exists
         run: |
           brew tap CoZooo/tap
-          brew livecheck --cask --newer-only ab-download-manager || true
           RAW="$(brew livecheck --cask --newer-only ab-download-manager || true)"
           echo "LIVE: $RAW"
           NEW_VER="$(printf "%s" "$RAW" | sed -nE 's/.*==>\s*([0-9][0-9A-Za-z._-]*).*/\1/p')"
