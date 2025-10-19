@@ -25,11 +25,11 @@ jobs:
           fi
           brew --version
 
-      - name: Brew update
-        run: brew update
+      #- name: Brew update
+      #  run: brew update
 
-      - name: (Optional) Audit current cask quickly
-        run: brew audit --cask --strict --online ./Casks/ab-download-manager.rb || true
+      #- name: (Optional) Audit current cask quickly
+      #  run: brew audit --cask --strict --online ./Casks/ab-download-manager.rb || true
 
       - name: Livecheck to see if newer exists
         run: |
