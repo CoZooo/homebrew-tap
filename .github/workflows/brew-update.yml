@@ -17,10 +17,6 @@ jobs:
     steps:
       - name: Checkout tap repo
         uses: actions/checkout@v4
-        with:
-          ref: main
-          fetch-depth: 0
-          persist-credentials: true
 
       - name: Ensure Homebrew is available
         run: |
@@ -66,4 +62,7 @@ jobs:
       - name: Push changes
         if: ${{ steps.detect.outputs.newver != '' }}
         run: |
-          git push
+          TAP_DIR="$(brew --repo CoZooo/tap)"
+          git -C "$TAP_DIR" fetch origin main
+          git -C "$TAP_DIR" rebase origin/main
+          git -C "$TAP_DIR" push origin HEAD:main
