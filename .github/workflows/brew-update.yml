@@ -2,7 +2,7 @@ name: Auto bump ab-download-manager cask
 
 on:
   schedule:
-    - cron: "17 3 * * *"   # 每天 11:17 SGT 左右运行；可改
+    - cron: "17 3 * * *"
   workflow_dispatch: {}
 
 permissions:
