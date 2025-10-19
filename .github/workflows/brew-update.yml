@@ -52,6 +52,7 @@ jobs:
           echo "newver=$NEW_VER" >> "$GITHUB_OUTPUT"
 
       - name: Bump cask
+        if: ${{ steps.detect.outputs.newver != '' }}
         run: |
           NEW_VER="${{ steps.detect.outputs.newver }}"
           brew bump-cask-pr --no-browse --write-only --commit \
@@ -59,7 +60,6 @@ jobs:
             ab-download-manager
       
       - name: Push changes
+        if: ${{ steps.detect.outputs.newver != '' }}
         run: |
-          BRANCH="main"
-          git checkout -b "$BRANCH"
-          git push --set-upstream origin "$BRANCH"
+          git push
