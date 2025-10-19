@@ -42,7 +42,7 @@ jobs:
           brew bump-cask-pr --no-browse --strict --write --commit ab-download-manager
       
       - name: Push changes
-         run: |
+        run: |
           BRANCH="main"
           git checkout -b "$BRANCH"
           git push --set-upstream origin "$BRANCH"
