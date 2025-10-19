@@ -32,7 +32,9 @@ jobs:
         run: brew audit --cask --strict --online ./Casks/ab-download-manager.rb || true
 
       - name: Livecheck to see if newer exists
-        run: brew livecheck --cask --newer-only ab-download-manager || true
+        run: |
+          brew tap CoZooo/tap
+          brew livecheck --cask --newer-only ab-download-manager || true
 
 
       - name: Bump cask (write & commit locally)
