@@ -5,13 +5,13 @@ cask "ab-download-manager" do
   url "https://github.com/amir1376/ab-download-manager/releases/download/v#{version}/ABDownloadManager_#{version}_mac_arm64.dmg",
       verified: "github.com/amir1376/ab-download-manager/"
   name "AB Download Manager"
-  desc "A Download Manager that speeds up your downloads."
+  desc "Download Manager that speeds up your downloads"
   homepage "https://abdownloadmanager.com/"
-
-  app "ABDownloadManager.app"
 
   livecheck do
     url :url
     strategy :github_latest
   end
+
+  app "ABDownloadManager.app"
 end
