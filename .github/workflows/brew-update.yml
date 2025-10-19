@@ -55,14 +55,7 @@ jobs:
         if: ${{ steps.detect.outputs.newver != '' }}
         run: |
           NEW_VER="${{ steps.detect.outputs.newver }}"
-          brew bump-cask-pr --no-browse --write-only --commit \
+          brew bump-cask-pr --no-browse \
             --version "$NEW_VER" \
             ab-download-manager
-      
-      - name: Push changes
-        if: ${{ steps.detect.outputs.newver != '' }}
-        run: |
-          TAP_DIR="$(brew --repo CoZooo/tap)"
-          git -C "$TAP_DIR" fetch origin main
-          git -C "$TAP_DIR" rebase origin/main
-          git -C "$TAP_DIR" push origin HEAD:main
+
