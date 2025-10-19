@@ -1,0 +1,48 @@
+name: Auto bump ab-download-manager cask
+
+on:
+  schedule:
+    - cron: "17 3 * * *"   # 每天 11:17 SGT 左右运行；可改
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  bump:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout tap repo
+        uses: actions/checkout@v4
+
+      - name: Ensure Homebrew is available
+        run: |
+          if ! command -v brew >/dev/null 2>&1; then
+            /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+            echo "/opt/homebrew/bin" >> "$GITHUB_PATH"
+          fi
+          brew --version
+
+      - name: Brew update
+        run: brew update
+
+      - name: (Optional) Audit current cask quickly
+        run: brew audit --cask --strict --online ./Casks/ab-download-manager.rb || true
+
+      - name: Livecheck to see if newer exists
+        run: brew livecheck --cask --newer-only ab-download-manager || true
+
+
+      - name: Bump cask (write & commit locally)
+        env:
+          HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          brew bump-cask-pr --no-browse --strict --write --commit ab-download-manager
+      
+      - name: Push changes
+         un: |
+          BRANCH="main"
+          git checkout -b "$BRANCH"
+          git push --set-upstream origin "$BRANCH"
