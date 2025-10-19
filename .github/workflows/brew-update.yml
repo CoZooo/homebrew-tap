@@ -12,7 +12,8 @@ permissions:
 jobs:
   bump:
     runs-on: macos-latest
-
+    env:
+      HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Checkout tap repo
         uses: actions/checkout@v4
