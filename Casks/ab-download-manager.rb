@@ -5,7 +5,7 @@ cask "ab-download-manager" do
   url "https://github.com/amir1376/ab-download-manager/releases/download/v#{version}/ABDownloadManager_#{version}_mac_arm64.dmg",
       verified: "github.com/amir1376/ab-download-manager/"
   name "AB Download Manager"
-  desc "AB Download Manager is a desktop app that helps you manage and organize your downloads more efficiently than ever before."
+  desc "A Download Manager that speeds up your downloads."
   homepage "https://abdownloadmanager.com/"
 
   app "ABDownloadManager.app"
