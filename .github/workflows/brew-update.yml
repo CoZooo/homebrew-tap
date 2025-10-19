@@ -51,6 +51,7 @@ jobs:
           echo "newver=$NEW_VER" >> "$GITHUB_OUTPUT"
 
       - name: Bump cask
+        if: ${{ steps.detect.outputs.newver != '' }}
         env:
           HOMEBREW_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -60,6 +61,7 @@ jobs:
             ab-download-manager
       
       - name: Push changes
+        if: ${{ steps.detect.outputs.newver != '' }}
         run: |
           BRANCH="main"
           git checkout -b "$BRANCH"
