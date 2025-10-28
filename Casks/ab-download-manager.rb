@@ -1,6 +1,6 @@
 cask "ab-download-manager" do
-  version "1.7.0"
-  sha256 "43b94b1f76f7b0604376676edddf3ee68bbdca9dd3256fc8f49513167fd55fd6"
+  version "1.7.1"
+  sha256 "b19c223e90e3504e9b97e6078475c09199f6ca81d65f1fda1836e0e71a494718"
 
   url "https://github.com/amir1376/ab-download-manager/releases/download/v#{version}/ABDownloadManager_#{version}_mac_arm64.dmg",
       verified: "github.com/amir1376/ab-download-manager/"
