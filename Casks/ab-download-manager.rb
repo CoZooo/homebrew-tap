@@ -1,14 +1,12 @@
 cask "ab-download-manager" do
-  version "1.7.0"
-
   arch arm: "arm64", intel: "x64"
 
-  sha256 arm:   "43b94b1f76f7b0604376676edddf3ee68bbdca9dd3256fc8f49513167fd55fd6",
-         intel: "6577814840f6c14e8f71a0e2e02ff354596b65a951568ae064715cc75371d545"
+  version "1.7.1"
+  sha256 arm:   "b19c223e90e3504e9b97e6078475c09199f6ca81d65f1fda1836e0e71a494718",
+         intel: "00d28871cb5cb6f4c9d822df4bd3475900f953916a2664d2074ddaf66ad86004"
 
   url "https://github.com/amir1376/ab-download-manager/releases/download/v#{version}/ABDownloadManager_#{version}_mac_#{arch}.dmg",
       verified: "github.com/amir1376/ab-download-manager/"
-
   name "AB Download Manager"
   desc "Download manager that speeds up your downloads"
   homepage "https://abdownloadmanager.com/"
